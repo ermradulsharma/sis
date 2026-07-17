@@ -5,6 +5,10 @@
   Tailwind v4 handles most of the heavy lifting.
 */
 @layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
   :root {
     --background: #0f172a; /* slate-950 */
     --foreground: #f8fafc; /* slate-50 */

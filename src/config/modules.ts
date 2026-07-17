@@ -27,7 +27,7 @@ export const MODULES: ModuleConfig[] = [
     name: 'Dashboard',
     description: 'Centralized overview with KPIs, charts, and quick actions',
     enabled: true,
-    basePath: '/dashboard',
+    basePath: '/admin',
     icon: 'LayoutDashboard',
   },
   {

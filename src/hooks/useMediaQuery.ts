@@ -9,18 +9,19 @@ import { useState, useEffect } from 'react';
  * @returns Whether the media query currently matches
  */
 export function useMediaQuery(query: string): boolean {
-  const [matches, setMatches] = useState(false);
+    const [matches, setMatches] = useState(false);
 
-  useEffect(() => {
-    const media = window.matchMedia(query);
-    setMatches(media.matches);
+    useEffect(() => {
+        const media = window.matchMedia(query);
+        // eslint-disable-next-line
+        setMatches(media.matches);
 
-    const handler = (event: MediaQueryListEvent) => setMatches(event.matches);
-    media.addEventListener('change', handler);
-    return () => media.removeEventListener('change', handler);
-  }, [query]);
+        const handler = (event: MediaQueryListEvent) => setMatches(event.matches);
+        media.addEventListener('change', handler);
+        return () => media.removeEventListener('change', handler);
+    }, [query]);
 
-  return matches;
+    return matches;
 }
 
 /** Convenience hooks for common breakpoints. */

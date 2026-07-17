@@ -10,6 +10,8 @@ export interface IUser extends Document {
   roleId: Types.ObjectId;
   status: UserStatus;
   lastLogin?: Date;
+  resetPasswordToken?: string;
+  resetPasswordExpires?: Date;
   createdAt: Date;
   updatedAt: Date;
   comparePassword(candidatePassword: string): Promise<boolean>;
@@ -56,6 +58,14 @@ const UserSchema = new Schema<IUser>(
       type: Date,
       default: null,
     },
+    resetPasswordToken: {
+      type: String,
+      default: null,
+    },
+    resetPasswordExpires: {
+      type: Date,
+      default: null,
+    },
   },
   {
     timestamps: true,
@@ -63,16 +73,11 @@ const UserSchema = new Schema<IUser>(
 );
 
 /** Hash password before saving if it has been modified. */
-UserSchema.pre('save', async function (next) {
-  if (!this.isModified('password')) return next();
+UserSchema.pre('save', async function () {
+  if (!this.isModified('password')) return;
 
-  try {
-    const salt = await bcrypt.genSalt(12);
-    this.password = await bcrypt.hash(this.password, salt);
-    next();
-  } catch (error) {
-    next(error as Error);
-  }
+  const salt = await bcrypt.genSalt(12);
+  this.password = await bcrypt.hash(this.password, salt);
 });
 
 /** Instance method to compare a candidate password against the hash. */
@@ -81,7 +86,6 @@ UserSchema.methods.comparePassword = async function (candidatePassword: string):
 };
 
 /** Indexes for common query patterns. */
-UserSchema.index({ email: 1 });
 UserSchema.index({ status: 1 });
 UserSchema.index({ roleId: 1 });
 
